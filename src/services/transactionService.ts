@@ -102,11 +102,11 @@ class TransactionService {
 
     cacheKeys.forEach((key: string)=> {
       if (key.startsWith(sourceAccountKey)) {
-        cache.del(sourceAccountKey);
+        cache.del(key);
       }
       // TODO: Optimize invalidation of accounts list
       if (key.startsWith(accountListKey)) {
-        cache.del(accountListKey);
+        cache.del(key);
       }
     });
 

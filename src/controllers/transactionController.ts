@@ -10,10 +10,10 @@ class TransactionController {
     const schema = Joi.object({
       sourceAccountId: Joi.string().required(),
       amount: Joi.number().positive().required(),
-      recipientName: Joi.string().required(),
+      recipientName: Joi.string().empty(""),
       targetIBAN: Joi.string().required(),
-      targetBIC: Joi.string().required(),
-      reference: Joi.string().required(),
+      targetBIC: Joi.string().empty(""),
+      reference: Joi.string().empty(""),
     });
     validateRequest(req, next, schema);
   }

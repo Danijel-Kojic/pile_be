@@ -2,46 +2,32 @@ import { Request, NextFunction } from "express";
 import Joi from "joi";
 
 export function validateRequest(
-    req: Request,
-    next: NextFunction,
-    schema: Joi.ObjectSchema
+  req: Request,
+  next: NextFunction,
+  schema: Joi.ObjectSchema
 ) {
-    const options = {
-        abortEarly: false, // include all errors
-        allowUnknown: true, // ignore unknown props
-        stripUnknown: true, // remove unknown props
-    };
-    let err_val = schema.validate(req.body, options);
-    let error = err_val.error;
-    let value = err_val.value;
-    if (!error && value) {
-        req.body = value;
+  const options = {
+    abortEarly: false, // include all errors
+    allowUnknown: true, // ignore unknown props
+    stripUnknown: true, // remove unknown props
+  };
+  const reqPayloads = [req.body, req.params, req.query];
+  for (let reqPayload of reqPayloads) {
+    if (reqPayload && Object.keys(reqPayload).length > 0) {
+      const err_val = schema.validate(reqPayload, options);
+      const error = err_val.error;
+      const value = err_val.value;
+      if (!error && value) {
+        reqPayload = value;
         next();
         return;
-    }
-
-    err_val = schema.validate(req.params, options);
-    error = err_val.error;
-    value = err_val.value;
-
-    if (!error && value) {
-        req.params = value;
-        next();
-        return;
-    }
-
-    err_val = schema.validate(req.query, options);
-    error = err_val.error;
-    value = err_val.value;
-    if (!error && value) {
-        req.query = value;
-        next();
-        return;
-    }
-
-    next(
-        `Validation error: ${error?.details
+      } else {
+        next(
+          `Validation error: ${error?.details
             .map((x) => x.message)
             .join(", ")}`
-    );
+        );
+      }
+    }
+  }
 }
