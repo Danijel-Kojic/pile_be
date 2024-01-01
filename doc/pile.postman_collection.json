@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "941b01ee-7aad-4486-8707-4bfea7666408",
+		"name": "pile",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getTransactions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user-api-url}}/transactions/?sourceAccountId={{source-account-id}}",
+					"host": [
+						"{{user-api-url}}"
+					],
+					"path": [
+						"transactions",
+						""
+					],
+					"query": [
+						{
+							"key": "sourceAccountId",
+							"value": "{{source-account-id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createTransaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sourceAccountId\": \"{{source-account-id}}\",\r\n    \"amount\": 123,\r\n    \"recipientName\": \"auu9v\",\r\n    \"targetIBAN\": \"{{iban}}\",\r\n    \"targetBIC\": \"\",\r\n    \"reference\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-api-url}}/transactions/",
+					"host": [
+						"{{user-api-url}}"
+					],
+					"path": [
+						"transactions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "listAccounts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user-api-url}}/accounts/?minBalance=80000&maxBalance=90000",
+					"host": [
+						"{{user-api-url}}"
+					],
+					"path": [
+						"accounts",
+						""
+					],
+					"query": [
+						{
+							"key": "minBalance",
+							"value": "80000"
+						},
+						{
+							"key": "maxBalance",
+							"value": "90000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAccountByIBAN",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user-api-url}}/accounts/{{iban}}",
+					"host": [
+						"{{user-api-url}}"
+					],
+					"path": [
+						"accounts",
+						"{{iban}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "user-api-url",
+			"value": "http://127.0.0.1:6000/api/v1",
+			"type": "default"
+		},
+		{
+			"key": "iban",
+			"value": "DE03678822021961930232",
+			"type": "default"
+		},
+		{
+			"key": "source-account-id",
+			"value": "2fd5e4e0-16e2-4337-b63d-22582d2623f5",
+			"type": "default"
+		}
+	]
+}
