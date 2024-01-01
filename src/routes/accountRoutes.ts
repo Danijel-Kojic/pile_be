@@ -6,10 +6,10 @@ import AccountController from '../controllers/accountController';
 const router = express.Router();
 
 // Endpoint for listing and filtering accounts
-router.get('/', AccountController.listAccounts);
+router.get('/', AccountController.listAccountsSchema, AccountController.listAccounts);
 
 // Endpoint for getting a single account by IBAN
-router.get('/:iban', AccountController.getAccountByIBAN);
+router.get('/:iban', AccountController.getAccountByIBANSchema, AccountController.getAccountByIBAN);
 
 // Additional endpoints for updating balance after fund transfer, if needed
 

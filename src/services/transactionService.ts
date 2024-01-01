@@ -1,40 +1,76 @@
 // src/services/transactionService.ts
 
+import Account from '../models/Account';
 import Transaction from '../models/Transaction';
+import { sequelize } from '../config/database';
 
 class TransactionService {
   public static async createTransaction(
-    sourceAccount: string,
+    sourceAccountId: string,
     amount: number,
     recipientName: string,
     targetIBAN: string,
     targetBIC: string,
     reference: string
   ) {
-    // Validate source account balance (assuming you have a validation logic)
-    // You might want to implement more validation checks as needed
+    const transaction = await sequelize.transaction();
 
-    // Create a new transaction record
-    const transaction = await Transaction.create({
-      sourceAccount,
-      amount,
-      recipientName,
-      targetIBAN,
-      targetBIC,
-      reference,
-    });
+    try {
+      // Fetch the source account
+      const sourceAccount = await Account.findByPk(sourceAccountId, { transaction });
 
-    // Log the transaction (this can be extended based on your logging needs)
-    // console.log(`Transaction logged: ${JSON.stringify(transaction, null, 2)}`);
+      if (!sourceAccount) {
+        throw new Error(`Source account with ID ${sourceAccountId} not found.`);
+      }
 
-    return transaction;
+      // Check if the source account has a sufficient balance
+      if (sourceAccount.balance < amount) {
+        throw new Error('Insufficient balance in the source account.');
+      }
+
+      // Fetch the target account using the targetIBAN
+      const targetAccount = await Account.findOne({ where: { iban: targetIBAN }, transaction });
+
+      if (!targetAccount) {
+        throw new Error(`Target account with IBAN ${targetIBAN} not found.`);
+      }
+
+      // Update the source account balance
+      await sourceAccount.update({ balance: sourceAccount.balance - amount }, { transaction });
+
+      // Update the target account balance
+      await targetAccount.update({ balance: targetAccount.balance + amount }, { transaction });
+
+      // Create the transaction record
+      const createdTransaction = await Transaction.create(
+        {
+          sourceAccountId,
+          amount,
+          recipientName,
+          targetIBAN,
+          targetBIC,
+          reference,
+        },
+        { transaction }
+      );
+
+      // Commit the transaction
+      await transaction.commit();
+
+      return createdTransaction;
+    } catch (error) {
+      // Rollback the transaction in case of an error
+      await transaction.rollback();
+      console.error('Error creating transaction:', error);
+      throw error;
+    }
   }
 
-  public static async getTransactions(sourceAccount: string, page = 1, pageSize = 10) {
+  public static async getTransactions(sourceAccountId: string, page = 1, pageSize = 10) {
     const offset = (page - 1) * pageSize;
 
     const transactions = await Transaction.findAndCountAll({
-      where: { sourceAccount },
+      where: { sourceAccountId },
       offset,
       limit: pageSize,
     });

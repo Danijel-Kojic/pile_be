@@ -8,12 +8,15 @@ class AccountService {
     const offset = (page - 1) * pageSize;
     const whereClause: any = {};
 
-    if (minBalance !== undefined) {
-      whereClause.balance = { [sequelize.Op.gte]: minBalance };
-    }
-
-    if (maxBalance !== undefined) {
-      whereClause.balance = { [sequelize.Op.lte]: maxBalance };
+    // Handle min and max balance conditions correctly
+    if (minBalance !== undefined || maxBalance !== undefined) {
+      whereClause.balance = {};
+      if (minBalance !== undefined) {
+        whereClause.balance[sequelize.Op.gte] = minBalance;
+      }
+      if (maxBalance !== undefined) {
+        whereClause.balance[sequelize.Op.lte] = maxBalance;
+      }
     }
 
     const accounts = await Account.findAndCountAll({

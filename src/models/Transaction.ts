@@ -5,16 +5,14 @@ import { sequelize } from '../config/database';
 
 class Transaction extends Model {
   public id!: number;
-  public sourceAccount!: string;
+  public sourceAccountId!: string;
   public amount!: number;
   public recipientName!: string;
   public targetIBAN!: string;
   public targetBIC!: string;
   public reference!: string;
 
-  // Add any other fields as needed
-
-  public readonly createdAt!: Date;
+  public createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
@@ -25,7 +23,7 @@ Transaction.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    sourceAccount: {
+    sourceAccountId: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -50,6 +48,10 @@ Transaction.init(
       allowNull: false,
     },
     // Add any other fields as needed
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    }
   },
   {
     sequelize,

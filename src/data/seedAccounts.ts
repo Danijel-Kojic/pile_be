@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { sequelize } from '../config/database'; // Import your Sequelize instance
 import Account from '../models/Account'; // Import your Account model
+import Transaction from '../models/Transaction'; // Import your Transaction model
 
 const seedData = async () => {
   try {
@@ -24,8 +25,11 @@ const seedData = async () => {
 
     // Insert sample accounts into the database
     await Account.bulkCreate(inputAccounts);
+    console.log('Account data seeded successfully');
 
-    console.log('Data seeded successfully');
+    // Sync the Transaction model with the database
+    await Transaction.sync({ force: true });
+    console.log('Empty transactions table created successfully');
   } catch (error) {
     console.error('Error seeding data:', error);
   } finally {
