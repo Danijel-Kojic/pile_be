@@ -2,9 +2,18 @@
 
 import Account from '../models/Account';
 import sequelize from 'sequelize';
+import cache from 'memory-cache';
 
 class AccountService {
   public static async listAccounts(minBalance?: number, maxBalance?: number, page = 1, pageSize = 10) {
+    // Generate a unique key for caching based on the provided parameters
+    const cacheKey = `accounts-list-${minBalance}-${maxBalance}-${page}-${pageSize}`;
+
+    // Check if the data is already in the cache
+    const cachedData = cache.get(cacheKey);
+    if (cachedData) {
+      return cachedData;
+    }
     const offset = (page - 1) * pageSize;
     const whereClause: any = {};
 
@@ -26,14 +35,26 @@ class AccountService {
     });
 
     const totalBalance = accounts.rows.reduce((sum, account) => sum + (+account.balance), 0);
-
-    return { accounts: accounts.rows, totalBalance, totalPages: Math.ceil(accounts.count / pageSize) };
+    const ret = { accounts: accounts.rows, totalBalance, totalPages: Math.ceil(accounts.count / pageSize) };
+    // Store the fetched data in the cache with a TTL of 5 minutes
+    cache.put(cacheKey, ret, 5 * 60 * 1000);
+    return ret;
   }
 
   public static async getAccountByIBAN(iban: string) {
-    return Account.findOne({
+    // Generate a unique key for caching based on the IBAN
+    const cacheKey = `account-iban-${iban}`;
+    // Check if the data is already in the cache
+    const cachedData = cache.get(cacheKey);
+    if (cachedData) {
+      return cachedData;
+    }
+    const account = Account.findOne({
       where: { iban },
     });
+    // Store the fetched data in the cache with a TTL of 5 minutes
+    cache.put(cacheKey, account, 5 * 60 * 1000);
+    return account;
   }
 
   public static async updateBalance(iban: string, amount: number) {

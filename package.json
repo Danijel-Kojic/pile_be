@@ -21,6 +21,7 @@
     "config": "^3.3.9",
     "express": "^4.18.2",
     "joi": "^17.11.0",
+    "memory-cache": "^0.2.0",
     "pg": "^8.11.3",
     "sequelize": "^6.35.2"
   },
@@ -28,6 +29,7 @@
     "@types/config": "^3.3.3",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.11",
+    "@types/memory-cache": "^0.2.5",
     "@types/node": "^20.10.6",
     "@types/pg": "^8.10.9",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
@@ -49,11 +51,22 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "roots": ["<rootDir>/src"],
+    "roots": [
+      "<rootDir>/src"
+    ],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
-    "setupFilesAfterEnv": ["<rootDir>/src/setupTests.ts"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.ts"
+    ]
   }
 }
