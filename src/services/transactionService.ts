@@ -36,10 +36,10 @@ class TransactionService {
       }
 
       // Update the source account balance
-      await sourceAccount.update({ balance: sourceAccount.balance - amount }, { transaction });
+      await sourceAccount.update({ balance: Number(sourceAccount.balance) - amount }, { transaction });
 
       // Update the target account balance
-      await targetAccount.update({ balance: targetAccount.balance + amount }, { transaction });
+      await targetAccount.update({ balance: Number(targetAccount.balance) + amount }, { transaction });
 
       // Create the transaction record
       const createdTransaction = await Transaction.create(
