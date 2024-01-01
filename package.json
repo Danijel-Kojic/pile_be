@@ -12,7 +12,8 @@
     "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
     "test": "jest",
-    "seed": "ts-node src/data/seedAccounts.ts"
+    "seed": "ts-node src/data/seedAccounts.ts",
+    "seed-start": "npm run seed && npm start"
   },
   "author": "Danijel Kojic",
   "license": "ISC",

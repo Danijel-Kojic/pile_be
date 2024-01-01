@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  # Node.js application
+  app:
+    build: .
+    ports:
+      - 6000:6000
+    environment:
+      PORT: 6000 
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: pile
+      PGPASSWORD: 123456
+      PGDATABASE: pile
+    depends_on:
+      - db
+    links:
+      - db
+
+  # PostgreSQL database
+  db:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_USER: pile
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: pile
