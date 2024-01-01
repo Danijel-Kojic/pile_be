@@ -1,10 +1,20 @@
 // src/config/database.ts
 
 import { Sequelize } from 'sequelize';
-import config from "config";
+// Load environment variables from a .env file (optional)
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const sequelize = new Sequelize(
-  `postgres://${config.get("host")}/${config.get("database")}`
+{
+  dialect: 'postgres',
+  host: process.env.PGHOST,
+  port: parseInt(process.env.PGPORT || "5432"),
+  username: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
+}
 );
 
 export { sequelize };
