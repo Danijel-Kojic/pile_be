@@ -4,7 +4,7 @@ import { Sequelize } from 'sequelize';
 import config from "config";
 
 const sequelize = new Sequelize(
-  config.get("database")
+  `postgres://${config.get("host")}/${config.get("database")}`
 );
 
 export { sequelize };
